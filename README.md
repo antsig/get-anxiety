@@ -1,19 +1,16 @@
-# 🎈 Blank app template
+# Aplikasi Deteksi Kecemasan
+Saat ini teks yang dapat dianalisis adalah teks bahasa inggris dengan tingkat akurasi sekitar 82%. Apliasi ini akan terus diupdate untuk dapat digunakan pada teks bahasa indonesia
 
-A simple Streamlit app template for you to modify!
+### Menjalankan di local
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://blank-app-template.streamlit.app/)
-
-### How to run it on your own machine
-
-1. Install the requirements
+1. Install library
 
    ```
    $ pip install -r requirements.txt
    ```
 
-2. Run the app
+2. Jalankan aplikasi
 
    ```
-   $ streamlit run streamlit_app.py
+   $ streamlit run app.py
    ```

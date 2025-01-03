@@ -1,46 +1,69 @@
-import streamlit as st
 import tensorflow as tf
-import numpy as np
+import streamlit as st
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from utility import load_tokenizer_from_json
+import numpy as np
 
-# Load the trained model
-model = tf.keras.models.load_model("best_model-2.keras")
-
-# Load the tokenizer information
-tokenizer_data = np.load("tokenizer.npz", allow_pickle=True)
-
-# List all keys in the .npz file
-print(tokenizer_data.keys())
-
-word_index = tokenizer_data['vocab_size'].item()  # Word to index mapping
-max_sequence_length = int(tokenizer_data['maxlen'])  # Max sequence length
-
-# Function to preprocess text
-def preprocess_input(text):
-    # Convert text to sequences using the word index
-    sequences = [[word_index.get(word, 0) for word in text.split()]]  # Tokenize text
-    # Pad the sequences to the max sequence length
-    padded = pad_sequences(sequences, maxlen=max_sequence_length, padding='post', truncating='post')
+# Fungsi untuk memproses input teks
+def preprocess_input(text, tokenizer, maxlen=100):
+    sequences = tokenizer.texts_to_sequences([text])  # Tokenisasi teks
+    padded = pad_sequences(sequences, maxlen=maxlen, padding='post', truncating='post')
     return padded
 
-# Predict function
-def predict(text):
-    preprocessed_text = preprocess_input(text)
-    prediction = model.predict(preprocessed_text)
-    return prediction
-
-# Streamlit App
-st.title("Text Classification App")
-st.write("This application classifies your input text using the trained model.")
-
-# Text input area
-user_input = st.text_area("Enter your text here:")
-
-# Button to trigger prediction
-if st.button("Predict"):
-    if user_input.strip():
-        prediction = predict(user_input)
-        st.write("### Prediction:")
-        st.write(prediction)
+# Fungsi untuk menginterpretasikan hasil prediksi dengan threshold
+def interpret_prediction_with_threshold(prediction, confidence, threshold=0.5):
+    if confidence < threshold:
+        return "Tidak Diketahui"
+    elif prediction == 0:
+        return "Teks Normal"
+    elif prediction == 1:
+        return "Teks Negatif"
     else:
-        st.warning("Please enter some text for prediction.")
+        return "Tidak Diketahui"
+
+# Memuat model
+model = tf.keras.models.load_model("best_model.keras")
+
+# Memuat tokenizer
+tokenizer = load_tokenizer_from_json("tokenizer.json")
+
+# Streamlit app
+st.title("Uji Model Deteksi Kecemasan")
+st.write("Aplikasi ini mendeteksi kecemasan pada teks Bahasa Inggris. Fitur deteksi Bahasa Indonesia dan Bahasa lainnya masih dalam pengembangan.")
+user_input = st.text_area("Masukkan teks di bawah ini (Bahasa Inggris):")
+
+if st.button("Prediksi"):
+    if user_input.strip():
+        try:
+            # Preprocessing input teks
+            processed_text = preprocess_input(user_input, tokenizer)
+
+            # Melakukan prediksi dengan model
+            raw_prediction = model.predict(processed_text)
+
+            # Mengambil nilai prediksi untuk kelas dengan probabilitas tertinggi
+            prediction = raw_prediction[0].argmax()
+            confidence = max(raw_prediction[0])
+
+            # Interpretasi hasil prediksi dengan threshold
+            result = interpret_prediction_with_threshold(prediction, confidence, threshold=0.5)
+
+            # Menampilkan hasil prediksi
+            st.subheader("Hasil Prediksi")
+            st.write(f"**Klasifikasi**: {result}")
+            st.write(f"**Confidence Score**: {confidence:.2f}")
+
+            # Menambahkan informasi tambahan
+            if result == "Teks Negatif":
+                st.warning("Teks ini menunjukkan kemungkinan adanya indikasi kecemasan.")
+            elif result == "Teks Normal":
+                st.success("Teks ini tidak menunjukkan indikasi kecemasan.")
+            else:
+                st.info("Model tidak yakin dengan prediksi. Harap masukkan teks yang lebih jelas.")
+
+        except Exception as e:
+            # Menampilkan pesan kesalahan
+            st.error(f"Terjadi kesalahan saat memproses prediksi: {e}")
+    else:
+        # Peringatan jika input kosong
+        st.warning("Harap masukkan teks terlebih dahulu.")
