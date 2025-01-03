@@ -28,7 +28,7 @@ model = tf.keras.models.load_model("best_model.keras")
 tokenizer = load_tokenizer_from_json("tokenizer.json")
 
 # Streamlit app
-st.title("Uji Model Deteksi Kecemasan")
+st.title("Model Deteksi Kecemasan")
 st.write("Aplikasi ini mendeteksi kecemasan pada teks Bahasa Inggris. Fitur deteksi Bahasa Indonesia dan Bahasa lainnya masih dalam pengembangan.")
 user_input = st.text_area("Masukkan teks di bawah ini (Bahasa Inggris):")
 
