@@ -1,5 +1,10 @@
 # Aplikasi Deteksi Kecemasan
-Saat ini teks yang dapat dianalisis adalah teks bahasa inggris dengan tingkat akurasi sekitar 82%. Apliasi ini akan terus diupdate untuk dapat digunakan pada teks bahasa indonesia
+
+- Bidirectional LSTM
+- Pre-trained Embedding Matrix FastText
+- Adam Optimizer dan Bayesian Optimization
+
+Saat ini teks yang dapat dianalisis adalah teks bahasa inggris dengan tingkat akurasi sekitar 82%. Aplikasi ini akan terus diupdate untuk dapat digunakan pada teks bahasa indonesia.
 
 ### Menjalankan di local
 
