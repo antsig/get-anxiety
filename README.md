@@ -11,11 +11,11 @@ Saat ini teks yang dapat dianalisis adalah teks bahasa inggris dengan tingkat ak
 1. Install library
 
    ```
-   $ pip install -r requirements.txt
+   pip install -r requirements.txt
    ```
 
 2. Jalankan aplikasi
 
    ```
-   $ streamlit run app.py
+   streamlit run app.py
    ```
