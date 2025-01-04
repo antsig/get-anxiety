@@ -28,9 +28,14 @@ model = tf.keras.models.load_model("best_model.keras")
 tokenizer = load_tokenizer_from_json("tokenizer.json")
 
 # Streamlit app
+st.set_page_config(
+    page_title="Deteksi Kecemasan", 
+    layout="centered", 
+    initial_sidebar_state="expanded"
+)
 st.title("Model Deteksi Kecemasan")
-st.write("Aplikasi ini mendeteksi kecemasan pada teks Bahasa Inggris. Fitur deteksi Bahasa Indonesia dan Bahasa lainnya masih dalam pengembangan.")
-user_input = st.text_area("Masukkan teks di bawah ini (Bahasa Inggris):")
+st.write("Aplikasi ini mendeteksi kecemasan dalam teks Bahasa Inggris dengan model Bi-LSTM. Fitur deteksi Bahasa Indonesia dan Bahasa lainnya masih dalam pengembangan.")
+user_input = st.text_area("Masukkan teks (Bahasa Inggris):")
 
 if st.button("Prediksi"):
     if user_input.strip():
