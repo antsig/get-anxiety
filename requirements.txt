@@ -1,3 +1,2 @@
-streamlit
-json
-tensorflow
+streamlit==1.41.1 
+tensorflow==2.18.0
